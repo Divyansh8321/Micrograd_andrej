@@ -19,14 +19,25 @@ class item:
         assert quantity >=0 , f"Quantity {quantity} is not greater than equal to zero"
 
         # Assign to self object
-        self.name = name
+        self.name = _name # Added an extra underscore to the name to make it private
         self.price = price
         self.quantity = quantity
 
         # Actions to execute
         item.all.append(self) # appending the instance to the list
         
-    
+    @property # This is sort of a getter method which can be used to get the value of the attribute
+    def name(self):
+        return self._name # underscore is used to make the attribute private
+        # use double underscore to make the attribute private and not accessible outside the class
+
+    @name.setter # This is sort of a setter method which can be used to set the value of the attribute
+    def name(self , value):
+        if len(value) > 10:
+            raise Exception("The name is too long")
+        else:
+            self._name = value
+
     def calculate_price(self):
         return self.price * self.quantity
     
@@ -35,9 +46,10 @@ class item:
         # discount for the specific instance.
 
     def __repr__(self):
-        return f'item("{self.name}" , {self.price} , {self.quantity})' # this is a string representation of the object
+        return f'{self.__class__.__name__}("{self.name}" , {self.price} , {self.quantity})' # this is a string representation of the object
+        # self.__class__.__name__ --> this will give the name of the class of the object so the item problem in the Phone thing is solved here.
 
-    @classmethod # calls this method before the __init__ method  
+    @classmethod # calls this method before the __init__ method  ; this is allowed using the decorator @classmethod
     def instantiate_from_csv(cls):
         with open('items.csv' , 'r') as f:
             reader = csv.DictReader(f)
@@ -52,7 +64,7 @@ class item:
                 quantity= float(item_data.get('quantity'))
             )
 
-    @staticmethod # does not take any argument
+    @staticmethod 
     def is_integer(num):
         # We will count out the floats that are point zero
         if isinstance(num , float):
@@ -109,17 +121,36 @@ class item:
 # Inherited Classes, Parent Classes and Child Classes
 
 class Phone(item): # Phone is the child class and item is the parent class
-    all =[]
-    def __init__(name : str , price : float, quantity = 0.0 , broken_phones = 0):
-        super.__init__(
+    # all =[] # Not required as we have already done this in the parent class
+    def __init__(self, name : str , price : float, quantity = 0.0 , broken_phones = 0):
+        super().__init__(
             name, price, quantity # these are the attributes obtained from the parent class
         )
+        self.broken_phones = broken_phones 
+        # Phone.all.append(self)  # Not required as we have already done this in the parent class
 
 
-Phone_1 = item('jscPhonev' ,100, 1)
-Phone_2 = item('jscPhonev2' ,1000, 4)
-Phone_1.broken_phones = 2
-Phone_2.broken_phones = 1
+Phone_1 = Phone("jscPhonev", 100, 1, 2)
+# Phone_2 = Phone('jscPhonev2' ,1000, 4 , 1)
+# Phone_1.broken_phones = 2
+# Phone_2.broken_phones = 1
 
 # can remove the hardcoded broken_phones from above and then copy the whole init from item and and put it in phone along with the broken_phones attribute as additional
 # instead of doing this we can use super() method which will call the init method of the parent class and then we can add the additional attribute to the child class.
+
+# print (Phone.all) # This gives the name item(jscphonev.....) as we have not defined the __repr__ method for the child class.
+# print (item.all) # This also gives phone(....) now , since the Phone instance creation calls the init from the parent class which appends the instance to the list.
+# So Item.all is the list of all the instances of the parent class and the child class.
+
+
+# Preferably create instances in main.py and keep separate python files for the parent and the child classes.
+
+# ENCAPSULARTION or restriting the users to only reading the attributes and not changing them.
+
+# can basically add the following to allow a new option while printing the name of the instance.
+# @property
+# def read_only_name(self):
+#     return 'AAA'
+# so wont be able to change this property now but can change the Phone_1.name property still.
+
+# 4 Key Pillars of OOPs: Encapsulation, Abstraction, Inheritance, Polymorphism
