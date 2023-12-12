@@ -145,7 +145,7 @@ Phone_1 = Phone("jscPhonev", 100, 1, 2)
 
 # Preferably create instances in main.py and keep separate python files for the parent and the child classes.
 
-# ENCAPSULARTION or restriting the users to only reading the attributes and not changing them.
+# ENCAPSULATION or restriting the users to only reading the attributes and not changing them.
 
 # can basically add the following to allow a new option while printing the name of the instance.
 # @property
@@ -154,3 +154,13 @@ Phone_1 = Phone("jscPhonev", 100, 1, 2)
 # so wont be able to change this property now but can change the Phone_1.name property still.
 
 # 4 Key Pillars of OOPs: Encapsulation, Abstraction, Inheritance, Polymorphism
+# Use refactor to make the changes wherever needed altogether. So in encapsulation can restrict price in a similar way to name as demonstrated in the commented code.
+
+# ABSTRACTION : Hiding the complexity from the user and only showing the essential features. Will create methods to be used within the final method. 
+# Add __ before the methods names to make it private and not accessible outside the class.
+
+# POLYMORPHISM : The ability to use a single entity in multiple scenarios.  
+# For example, len() function can be used on a list, tuple, string etc.
+
+# INHERITANCE : The ability to use the methods and attributes of the parent class in the child class.
+# Means apply_discount method can be used in the child class as well for example.
