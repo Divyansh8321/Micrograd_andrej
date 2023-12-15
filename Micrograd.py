@@ -60,6 +60,43 @@ class Value:
         
         return out 
     
+    def sigmoid(self):
+        t = 1/(1+ math.exp(-self.data))
+        out = Value (t, (self,), 'sig(x)')
+        
+        def _backward():
+            self.grad += (t * (1 - t)) * out.grad
+            
+        out._backward = _backward
+        
+        return out 
+    
+    def relu(self):
+        t = max(0, self.data)
+        out = Value(t, (self,), 'relu(x)')
+
+        def _backward():
+            self.grad += (self.data > 0) * out.grad
+
+        out._backward = _backward
+
+        return out
+    
+    def softmax(self):
+        exp_values = [math.exp(xi) for xi in self.data]
+        sum_exp_values = sum(exp_values)
+        softmax_values = [xi / sum_exp_values for xi in exp_values]
+
+        out = Value(softmax_values, (self,), 'softmax(x)')
+
+        def _backward():
+            for i in range(len(self.data)):
+                self.grad[i] += (softmax_values[i] * (1 - softmax_values[i])) * out.grad[i]
+
+        out._backward = _backward
+
+        return out
+    
     def exp(self):
         t = math.exp(self.data)
         out = Value (t, (self,), 'e^x')
